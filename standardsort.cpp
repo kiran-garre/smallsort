@@ -4,7 +4,7 @@
 #include <iostream>
 
 extern "C" {
-    void normal_sort_to_buffer_41(int* arr, int* stds, int length, int* buf);
+    void standard_sort_to_buffer(int* arr, int* stds, int length, int* buf);
 }
 
 /**
@@ -13,7 +13,7 @@ extern "C" {
  * @param length    Length of arr
  * @param buf       Buffer to be written to
  */
-void normal_sort_to_buffer_41(int* arr, int* stds, int length, int* buf) {
+void standard_sort_to_buffer(int* arr, int* stds, int length, int* buf) {
     const int DIVISIONS = 41;
     const int ROW_SIZE = length / (DIVISIONS - 1);
     std::vector<int> sorted[DIVISIONS];
