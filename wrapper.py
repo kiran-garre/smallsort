@@ -2,20 +2,43 @@ import numpy as np
 import ctypes
 from numpy.ctypeslib import ndpointer
 
-lib = ctypes.CDLL('./standardsort.so')
-lib.standard_sort_to_buffer.argtypes = [
+int_lib = ctypes.CDLL('./int_smallsort.so')
+int_lib.int_small_sort_to_buffer.argtypes = [
     ndpointer(np.int32, flags="C_CONTIGUOUS"), 
     ndpointer(np.int32, flags="C_CONTIGUOUS"), 
     ctypes.c_int,
     ndpointer(np.int32),
 ]
 
-def standard_sort(arr):
+float_lib = ctypes.CDLL('./float_smallsort.so')
+float_lib.float_small_sort_to_buffer.argtypes = [
+    ndpointer(np.float32, flags="C_CONTIGUOUS"), 
+    ndpointer(np.int32, flags="C_CONTIGUOUS"), 
+    ctypes.c_int,
+    ndpointer(np.float32, flags="C_CONTIGUOUS"),
+]
+
+int_types = [np.int32]
+float_types = [np.float32]
+
+def small_sort(arr):
+    DIVISONS = 41
     assert isinstance(arr, np.ndarray)
+    dtype = arr.dtype
+    
     avg = np.mean(arr)
     std = np.std(arr)
-    temp_arr = (np.round((arr - avg) / std, decimals=1) * 10 + 20).astype(np.int32)
+    ret_buf = np.empty_like(arr, dtype=dtype)
+    adjusted_z_scores = (np.round((arr - avg) / std, decimals=1) * ((DIVISONS - 1) / 4) + (DIVISONS - 1) / 2).astype(np.int32)
+    
+    if dtype in int_types:
+        int_lib.int_small_sort_to_buffer(arr, adjusted_z_scores, arr.size, ret_buf)
+    elif dtype in float_types:
+        float_lib.float_small_sort_to_buffer(arr, adjusted_z_scores, arr.size, ret_buf)
+    else:
+        raise Exception(f"Type {dtype} not supported")
+    
+    return ret_buf
 
-    ret_arr = np.empty_like(arr, dtype=arr.dtype)
-    lib.standard_sort_to_buffer(arr, temp_arr, arr.size, ret_arr)
-    return ret_arr
+
+
