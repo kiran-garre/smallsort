@@ -34,10 +34,7 @@ void int_small_sort_to_buffer(int* arr, int* stds, int length, int* buf) {
 
     int idx = 0;
     for (int i = 0; i < DIVISIONS; i++) {
-        // std::sort(sorted[i].begin(), sorted[i].end());
-        // radix_sort(sorted[i], sorted[i].size());
         counting_sort(sorted[i], sorted[i].size());
-        // dict_counting_sort(sorted[i], sorted[i].size());
         std::copy(sorted[i].begin(), sorted[i].end(), buf + idx);
         idx += sorted[i].size();
     }
@@ -49,16 +46,6 @@ int quick_pow10(int n) {
         100000, 1000000, 10000000, 100000000, 1000000000
     };
     return pow10[n]; 
-}
-
-std::vector<int> separate_negatives(std::vector<int> arr) {
-    std::vector<int> output;
-    output.reserve(arr.size());
-    for (int n : arr) {
-        if (n < 0)
-            output.push_back(-n);
-    }
-    return output;
 }
 
 void counting_sort(std::vector<int> & arr, int length) {
