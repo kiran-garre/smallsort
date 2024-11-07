@@ -13,14 +13,14 @@ if __name__ == '__main__':
     print(f'\nAveraging over {LOOPS} loops for {LENGTH:,} elements:')
     print()
     print('Integer arrays:')
-    print(f'SmallSort: {(timeit.timeit("small_sort(int_rand_arr)", globals=locals(), number=LOOPS) / LOOPS):.3f} seconds')
     print(f'NumPy sort: {(timeit.timeit("np.sort(int_rand_arr)", globals=locals(), number=LOOPS) / LOOPS):.3f} seconds')
+    print(f'SmallSort: {(timeit.timeit("small_sort(int_rand_arr)", globals=locals(), number=LOOPS) / LOOPS):.3f} seconds')
     print()
     
     float_rand_arr = np.random.uniform(LOW, HIGH, (LENGTH,)).astype(np.float32)
     print('Float arrays:')
-    print(f'SmallSort: {(timeit.timeit("small_sort(float_rand_arr)", globals=locals(), number=LOOPS) / LOOPS):.3f} seconds')
     print(f'NumPy sort: {(timeit.timeit("np.sort(float_rand_arr)", globals=locals(), number=LOOPS) / LOOPS):.3f} seconds')
+    print(f'SmallSort: {(timeit.timeit("small_sort(float_rand_arr)", globals=locals(), number=LOOPS) / LOOPS):.3f} seconds')
     print()
 
     result = (small_sort(int_rand_arr) == np.sort(int_rand_arr)).all()
