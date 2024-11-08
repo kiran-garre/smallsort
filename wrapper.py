@@ -2,15 +2,15 @@ import numpy as np
 import ctypes
 from numpy.ctypeslib import ndpointer
 
-int_lib = ctypes.CDLL('./int_smallsort.so')
+int_lib = ctypes.CDLL('./executables/int_smallsort.so')
 int_lib.int_small_sort_to_buffer.argtypes = [
     ndpointer(np.int32, flags="C_CONTIGUOUS"), 
     ndpointer(np.int32, flags="C_CONTIGUOUS"), 
     ctypes.c_int,
-    ndpointer(np.int32),
+    ndpointer(np.int32, flags="C_CONTIGUOUS"),
 ]
 
-float_lib = ctypes.CDLL('./float_smallsort.so')
+float_lib = ctypes.CDLL('./executables/float_smallsort.so')
 float_lib.float_small_sort_to_buffer.argtypes = [
     ndpointer(np.float32, flags="C_CONTIGUOUS"), 
     ndpointer(np.int32, flags="C_CONTIGUOUS"), 
