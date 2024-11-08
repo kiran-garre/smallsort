@@ -40,14 +40,6 @@ void int_small_sort_to_buffer(int* arr, int* stds, int length, int* buf) {
     }
 }
 
-int quick_pow10(int n) {
-    static int pow10[10] = {
-        1, 10, 100, 1000, 10000, 
-        100000, 1000000, 10000000, 100000000, 1000000000
-    };
-    return pow10[n]; 
-}
-
 void counting_sort(std::vector<int> & arr, int length) {
     auto [min, max] = std::minmax_element(arr.begin(), arr.end());
     std::vector<int> output(length);
