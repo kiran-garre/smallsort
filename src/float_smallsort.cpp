@@ -9,7 +9,7 @@ extern "C" {
     void float_small_sort_to_buffer(float* arr, int* stds, int length, float* buf);
 }
 
-std::vector<std::vector<float> > relative_counting_sort(std::vector<int> &, int, std::vector<float> &);
+std::vector<float> relative_counting_sort(std::vector<int> &, int, std::vector<float> &);
 
 /**
  * @param arr       Array to be sorted
@@ -30,31 +30,39 @@ void float_small_sort_to_buffer(float* arr, int* stds, int length, float* buf) {
     }
     int idx = 0;
     for (int i = 0; i < DIVISIONS; ++i) {
-        if (!sorted[i].size()) {
+        if (!sorted[i].size()) 
             continue;
-        }
         std::vector<int> truncated(sorted[i].begin(), sorted[i].end()); 
-        std::vector<std::vector<float> > temp = relative_counting_sort(truncated, sorted[i].size(), sorted[i]);
-        for (int j = 0; j < temp.size(); ++j) {
-            if (!temp.size()) 
-                continue;
-            std::sort(temp[j].begin(), temp[j].end());
-            std::copy(temp[j].begin(), temp[j].end(), buf + idx);
-            idx += temp[j].size();
+        std::vector<float> temp = relative_counting_sort(truncated, sorted[i].size(), sorted[i]);
+        int prev_val_idx = 0;
+        for (int j = 1; j < temp.size(); ++j) {
+            if ((int)temp[j] != (int)temp[prev_val_idx]) {
+                std::sort(temp.begin() + prev_val_idx, temp.begin() + j);
+                prev_val_idx = j;
+            }
         }   
+        std::sort(temp.begin() + prev_val_idx, temp.end());
+        std::copy(temp.begin(), temp.end(), buf + idx);
+        idx += temp.size();
     }
 }
 
-std::vector<std::vector<float> > relative_counting_sort(std::vector<int> & int_arr, int length, std::vector<float> & real_vals) {
+std::vector<float> relative_counting_sort(std::vector<int> & int_arr, int length, std::vector<float> & real_vals) {
     auto [min, max] = std::minmax_element(int_arr.begin(), int_arr.end());
-    std::vector<std::vector<float> > output(*max - *min + 1);
-    for (int i = 0; i < output.size(); ++i) {
-        output[i].reserve(10);
+    if (*min == *max) {
+        return real_vals;
+    }
+    std::vector<float> output(length);
+    std::vector<int> counts(*max - *min + 1);
+    for (int i = 0; i < length; ++i) {
+        counts[int_arr[i] - *min]++;
+    }
+    for (int i = 1; i < counts.size(); ++i) {
+        counts[i] += counts[i - 1];
     }
     for (int i = 0; i < length; ++i) {
-        output[int_arr[i] - *min].push_back(real_vals[i]);
+        output[(counts[int_arr[i] - *min]--) - 1] = real_vals[i];
     }
     return output;
 }
-
 
